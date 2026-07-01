@@ -28,12 +28,10 @@
  * ─────────────────────────────────────────────────────────────────────────
  */
 window.FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
-  authDomain: "nihongo-study-44759.firebaseapp.com",
-  projectId: "nihongo-study-44759",
-  storageBucket: "nihongo-study-44759.firebasestorage.app",
-  messagingSenderId: "679137954280",
-  appId: "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
-  measurementId: "G-2H415ZXZZ5"
+  apiKey:            "PASTE_YOUR_API_KEY_HERE",
+  authDomain:        "PASTE_YOUR_AUTH_DOMAIN_HERE",
+  projectId:         "PASTE_YOUR_PROJECT_ID_HERE",
+  storageBucket:     "PASTE_YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+  appId:             "PASTE_YOUR_APP_ID_HERE"
 };
-

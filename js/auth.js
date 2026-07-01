@@ -16,17 +16,21 @@ if (isConfigured) {
   db.settings({ merge: true });
 }
 
-/* ══════════════════ FIRESYNC ══════════════════
-   Thin layer between the app's Store and Firestore.
-   - push(): after every local save, sync to cloud
-   - pullAll(): on login, load cloud data → localStorage
-   ═══════════════════════════════════════════════ */
+/* ── Clear only progress keys (not theme) from localStorage ── */
+function clearLocalProgress() {
+  const toRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('nhk_v_') || k.startsWith('nhk_q_'))) toRemove.push(k);
+  }
+  toRemove.forEach(k => localStorage.removeItem(k));
+}
+
+/* ── Thin layer between app Store and Firestore ── */
 const FireSync = {
-  /* Push one localStorage key to Firestore */
   push(localKey, value) {
     if (!db || !currentUser) return;
     const uid = currentUser.uid;
-    // nhk_v_1 → vocab/1   nhk_q_1 → quiz/1   nhk_theme → settings/theme
     let coll, docId;
     if (localKey.startsWith('nhk_v_')) {
       coll = 'vocab'; docId = localKey.replace('nhk_v_', '');
@@ -42,20 +46,22 @@ const FireSync = {
       .catch(e => console.warn('FireSync push failed:', e));
   },
 
-  /* Pull all user data from Firestore → localStorage, then refresh UI */
   async pullAll() {
     if (!db || !currentUser) return;
     const uid = currentUser.uid;
+
+    /* ← KEY FIX: wipe previous user's local data before loading this user's */
+    clearLocalProgress();
+
     const base = db.collection('users').doc(uid);
     try {
-      // Vocab progress
-      const vocabSnap = await base.collection('vocab').get();
+      const [vocabSnap, quizSnap, themeDoc] = await Promise.all([
+        base.collection('vocab').get(),
+        base.collection('quiz').get(),
+        base.collection('settings').doc('theme').get()
+      ]);
       vocabSnap.forEach(d => localStorage.setItem(`nhk_v_${d.id}`, JSON.stringify(d.data())));
-      // Quiz scores
-      const quizSnap = await base.collection('quiz').get();
-      quizSnap.forEach(d => localStorage.setItem(`nhk_q_${d.id}`, JSON.stringify(d.data())));
-      // Theme
-      const themeDoc = await base.collection('settings').doc('theme').get();
+      quizSnap.forEach(d  => localStorage.setItem(`nhk_q_${d.id}`, JSON.stringify(d.data())));
       if (themeDoc.exists) {
         const t = themeDoc.data().value;
         localStorage.setItem('nhk_theme', t);
@@ -137,6 +143,7 @@ async function signInWithGoogle() {
 async function signOutUser() {
   if (!auth) return;
   try {
+    clearLocalProgress();   // wipe this user's local cache before signing out
     await auth.signOut();
   } catch(e) { console.error(e); }
 }
