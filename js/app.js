@@ -2,14 +2,20 @@
    にほんご Study — app.js
    ===================================================== */
 
-/* ── Persistence ── */
+/* ── Persistence — localStorage + Firebase sync ── */
 const Store = {
   k:  id => `nhk_v_${id}`,
   kq: id => `nhk_q_${id}`,
   load(id)  { try { return JSON.parse(localStorage.getItem(Store.k(id))) || {known:[],review:[]}; } catch { return {known:[],review:[]}; } },
-  save(id,d){ try { localStorage.setItem(Store.k(id),JSON.stringify(d)); } catch {} },
+  save(id,d){
+    try { localStorage.setItem(Store.k(id),JSON.stringify(d)); } catch {}
+    if (typeof FireSync !== 'undefined') FireSync.push(Store.k(id), d);
+  },
   loadQ(id) { try { return JSON.parse(localStorage.getItem(Store.kq(id))) || {c:0,w:0}; } catch { return {c:0,w:0}; } },
-  saveQ(id,d){ try { localStorage.setItem(Store.kq(id),JSON.stringify(d)); } catch {} }
+  saveQ(id,d){
+    try { localStorage.setItem(Store.kq(id),JSON.stringify(d)); } catch {}
+    if (typeof FireSync !== 'undefined') FireSync.push(Store.kq(id), d);
+  }
 };
 
 /* ── Audio ──────────────────────────────────────────────
@@ -537,6 +543,7 @@ function toggleTheme() {
   const next = isDark ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('nhk_theme', next);
+  if (typeof FireSync !== 'undefined') FireSync.push('nhk_theme', next);
   const btn = $('theme-btn');
   if (btn) btn.textContent = next === 'dark' ? '🌙' : '☀️';
 }
