@@ -101,16 +101,36 @@ async function signInWithGoogle() {
   if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
-    // Use redirect on mobile, popup on desktop
     if (/Mobi|Android/i.test(navigator.userAgent)) {
       await auth.signInWithRedirect(provider);
     } else {
       await auth.signInWithPopup(provider);
     }
   } catch(e) {
-    console.error('Sign-in error:', e);
     if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
-    alert('Sign-in failed: ' + e.message);
+
+    // Friendly diagnosis for the most common errors
+    let msg = 'Sign-in failed.\n\n';
+    if (e.code === 'auth/api-key-not-valid' || e.code === 'auth/invalid-api-key') {
+      msg += '🔑 API key issue. Check two things:\n'
+           + '1. Firebase Console → Authentication → Settings\n'
+           + '   → Authorized domains → add "' + location.hostname + '"\n\n'
+           + '2. Make sure all 6 values in firebase-config.js\n'
+           + '   are pasted correctly with no extra spaces.';
+    } else if (e.code === 'auth/popup-blocked') {
+      msg += '🚫 Popup blocked by browser.\n'
+           + 'Allow popups for this site and try again,\n'
+           + 'or use a different browser.';
+    } else if (e.code === 'auth/popup-closed-by-user') {
+      return; // user cancelled, no alert needed
+    } else if (e.code === 'auth/unauthorized-domain') {
+      msg += '🌐 Domain not authorized.\n'
+           + 'Firebase Console → Authentication → Settings\n'
+           + '→ Authorized domains → Add: "' + location.hostname + '"';
+    } else {
+      msg += e.message + '\n\nCode: ' + e.code;
+    }
+    alert(msg);
   }
 }
 

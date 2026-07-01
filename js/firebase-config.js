@@ -27,36 +27,13 @@
  * }
  * ─────────────────────────────────────────────────────────────────────────
  */
-// window.FIREBASE_CONFIG = {
-//   apiKey: "AIzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
-//   authDomain: "nihongo-study-44759.firebaseapp.com",
-//   projectId: "nihongo-study-44759",
-//   storageBucket: "nihongo-study-44759.firebasestorage.app",
-//   messagingSenderId: "679137954280",
-//   appId: "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
-//   measurementId: "G-2H415ZXZZ5"
-// };
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
+  authDomain: "nihongo-study-44759.firebaseapp.com",
+  projectId: "nihongo-study-44759",
+  storageBucket: "nihongo-study-44759.firebasestorage.app",
+  messagingSenderId: "679137954280",
+  appId: "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
+  measurementId: "G-2H415ZXZZ5"
+};
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
-    authDomain: "nihongo-study-44759.firebaseapp.com",
-    projectId: "nihongo-study-44759",
-    storageBucket: "nihongo-study-44759.firebasestorage.app",
-    messagingSenderId: "679137954280",
-    appId: "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
-    measurementId: "G-2H415ZXZZ5"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
