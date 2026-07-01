@@ -28,11 +28,11 @@
  * ─────────────────────────────────────────────────────────────────────────
  */
 window.FIREBASE_CONFIG = {
-  apiKey:            "IzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
-  authDomain:        "nihongo-study-44759.firebaseapp.com",
-  projectId:         "nihongo-study-44759",
-  storageBucket:     "nihongo-study-44759.firebasestorage.app",
+  apiKey: "AIzaSyCYQ-STsMskTrWnjAaIZfHWPccu5N_aBaE",
+  authDomain: "nihongo-study-44759.firebaseapp.com",
+  projectId: "nihongo-study-44759",
+  storageBucket: "nihongo-study-44759.firebasestorage.app",
   messagingSenderId: "679137954280",
-  appId:             "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
+  appId: "1:679137954280:web:ebe3a38ed6da96ae30fc5d",
   measurementId: "G-2H415ZXZZ5"
 };
