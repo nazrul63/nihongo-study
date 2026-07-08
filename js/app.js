@@ -2,6 +2,17 @@
    にほんご Study — app.js
    ===================================================== */
 
+/* ── Tab HTML — single source of truth ── */
+const LESSON_TABS = `
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">🃏 Flashcards</button>
+    <button class="mode-tab" data-mode="kanji"     onclick="switchMode('kanji')">漢字 Kanji</button>
+    <button class="mode-tab" data-mode="sentences" onclick="switchMode('sentences')">💬 Sentences</button>
+    <button class="mode-tab" data-mode="quiz"      onclick="switchMode('quiz')">✏️ Quiz</button>
+    <button class="mode-tab" data-mode="list"      onclick="switchMode('list')">📋 Word list</button>
+    <button class="mode-tab" data-mode="exercises" onclick="switchMode('exercises')">🎯 Exercises</button>
+  </div>`;
+
 /* ── Persistence — localStorage + Firebase sync ── */
 const Store = {
   k:  id => `nhk_v_${id}`,
@@ -123,15 +134,8 @@ function updateHeader() {
 /* ===================== LESSON SELECT ===================== */
 function selectLesson(id) {
   S = { ...S, lessonId:id, group:'All', mode:'flashcard', fc:{idx:0,flipped:false}, kanji:{idx:0} };
-  // Restore lesson tabs if we were in repo view
-  $('mode-tabs-wrap').innerHTML = `
-    <div class="mode-tabs">
-      <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">🃏 Flashcards</button>
-      <button class="mode-tab" data-mode="kanji"     onclick="switchMode('kanji')">漢字 Kanji</button>
-      <button class="mode-tab" data-mode="sentences" onclick="switchMode('sentences')">💬 Sentences</button>
-      <button class="mode-tab" data-mode="quiz"      onclick="switchMode('quiz')">✏️ Quiz</button>
-      <button class="mode-tab" data-mode="list"      onclick="switchMode('list')">📋 Word list</button>
-    </div>`;
+  // Restore lesson tabs (also called when returning from repository view)
+  $('mode-tabs-wrap').innerHTML = LESSON_TABS;
   buildSidebar();
   renderLesson();
 }
