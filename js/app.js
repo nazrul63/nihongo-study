@@ -153,7 +153,7 @@ function setTab(mode) {
 }
 function switchMode(mode) { setTab(mode); renderMode(); }
 function renderMode() {
-  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList };
+  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises };
   (map[S.mode] || (() => {}))();
 }
 
@@ -1030,3 +1030,72 @@ function renderGrammarRepo() {
   <div style="font-size:13px;color:var(--muted);margin-bottom:1rem">${grammar.length} patterns across ${LessonRegistry.all().length} lesson(s)</div>
   ${html}`;
 }
+
+/* ═══════════════════ EXERCISES ═══════════════════ */
+let exState = { answered: new Set(), correct: 0, total: 0 };
+
+function renderExercises() {
+  const l = LessonRegistry.get(S.lessonId);
+  if (!l || !l.exercises || !l.exercises.length) {
+    ma().innerHTML = '<div class="empty"><div class="big">✏️</div><p>No exercises for this lesson yet.</p></div>';
+    return;
+  }
+  exState = { answered: new Set(), correct: 0, total: l.exercises.length };
+
+  const html = l.exercises.map((ex, i) => `
+    <div class="ex-card" id="ex-${ex.id}">
+      <div class="ex-header">
+        <span class="ex-num">Q${i+1}</span>
+        <span class="ex-grammar">${ex.grammar}</span>
+      </div>
+      <div class="ex-instruction">${ex.instruction}</div>
+      ${ex.q ? `<div class="ex-question">${ex.q}</div>` : ''}
+      <div class="ex-options" id="opts-${ex.id}">
+        ${ex.options.map((opt, j) => `
+          <button class="ex-opt" data-idx="${j}" onclick="checkExercise(${ex.id}, ${j})">
+            <span class="ex-opt-label">${String.fromCharCode(65+j)}</span>
+            ${opt}
+          </button>`).join('')}
+      </div>
+      <div class="ex-feedback" id="fb-${ex.id}"></div>
+    </div>`).join('');
+
+  ma().innerHTML = `
+    <div class="ex-score-bar">
+      <span id="ex-score">0 / ${l.exercises.length} answered</span>
+      <button onclick="resetExercises()" style="background:none;border:none;color:var(--hint);cursor:pointer;font-size:12px">Reset</button>
+    </div>
+    <div class="ex-list">${html}</div>`;
+}
+
+function checkExercise(exId, chosen) {
+  const l = LessonRegistry.get(S.lessonId);
+  const ex = l.exercises.find(e => e.id === exId);
+  if (!ex || exState.answered.has(exId)) return;
+
+  exState.answered.add(exId);
+  const correct = chosen === ex.answer;
+  if (correct) exState.correct++;
+
+  // Disable all options and mark correct/wrong
+  const container = document.getElementById(`opts-${exId}`);
+  container.querySelectorAll('.ex-opt').forEach((btn, j) => {
+    btn.disabled = true;
+    if (j === ex.answer) btn.classList.add('ex-correct');
+    else if (j === chosen && !correct) btn.classList.add('ex-wrong');
+  });
+
+  // Show explanation
+  const fb = document.getElementById(`fb-${exId}`);
+  fb.innerHTML = `
+    <div class="ex-result ${correct ? 'ex-res-correct' : 'ex-res-wrong'}">
+      ${correct ? '✓ Correct!' : '✗ Not quite.'}
+    </div>
+    <div class="ex-explanation">${ex.explanation}</div>`;
+
+  // Update score
+  const scoreEl = document.getElementById('ex-score');
+  if (scoreEl) scoreEl.textContent = `${exState.answered.size} / ${exState.total} answered · ${exState.correct} correct`;
+}
+
+function resetExercises() { renderExercises(); }
