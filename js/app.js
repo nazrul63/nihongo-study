@@ -11,6 +11,7 @@ const LESSON_TABS = `
     <button class="mode-tab" data-mode="quiz"      onclick="switchMode('quiz')">✏️ Quiz</button>
     <button class="mode-tab" data-mode="list"      onclick="switchMode('list')">📋 Word list</button>
     <button class="mode-tab" data-mode="exercises" onclick="switchMode('exercises')">🎯 Exercises</button>
+    <button class="mode-tab" data-mode="practice" onclick="switchMode('practice')">🎯 Practice</button>
   </div>`;
 
 /* ── Persistence — localStorage + Firebase sync ── */
@@ -157,7 +158,8 @@ function setTab(mode) {
 }
 function switchMode(mode) { setTab(mode); renderMode(); }
 function renderMode() {
-  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises };
+  // const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises };
+  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises, practice:renderPractice };
   (map[S.mode] || (() => {}))();
 }
 
