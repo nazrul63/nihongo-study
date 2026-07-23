@@ -561,3 +561,16 @@ main { grid-area:main; padding:2rem; max-width:900px; }
   padding: .6rem .9rem; background: var(--surface2);
   border-radius: var(--rsm); border-left: 3px solid var(--border2);
 }
+
+/* for audio lessons */
+.official-audio-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px; padding: 6px 14px;
+  border: 1px solid var(--border2); border-radius: 999px;
+  background: var(--surface2); color: var(--muted);
+  font-size: 12px; text-decoration: none;
+  transition: all .15s;
+}
+.official-audio-pill:hover {
+  border-color: var(--accent); color: var(--accent);
+}

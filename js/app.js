@@ -690,6 +690,7 @@ function openRepository() {
       <button class="mode-tab ${R.tab==='vocab'?'active':''}"     onclick="switchRepoTab('vocab')">📖 Vocabulary</button>
       <button class="mode-tab ${R.tab==='kanji'?'active':''}"     onclick="switchRepoTab('kanji')">漢字 Kanji</button>
       <button class="mode-tab ${R.tab==='grammar'?'active':''}"   onclick="switchRepoTab('grammar')">📝 Grammar</button>
+      <button class="mode-tab ${R.tab==='resources'?'active':''}" onclick="switchRepoTab('resources')">📻 Resources</button>
     </div>`;
 
   renderRepoTab();
@@ -705,7 +706,8 @@ function switchRepoTab(tab) {
 }
 
 function renderRepoTab() {
-  const map = { dashboard:renderDashboard, vocab:renderVocabRepo, kanji:renderKanjiRepo, grammar:renderGrammarRepo };
+  // const map = { dashboard:renderDashboard, vocab:renderVocabRepo, kanji:renderKanjiRepo, grammar:renderGrammarRepo };
+  const map = { dashboard:renderDashboard, vocab:renderVocabRepo, kanji:renderKanjiRepo, grammar:renderGrammarRepo, resources:renderResourcesRepo };
   (map[R.tab] || renderDashboard)();
 }
 

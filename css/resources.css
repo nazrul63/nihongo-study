@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════════════════════
+   resources.css — append to style.css
+   ═══════════════════════════════════════════════════════ */
+
+.res-intro {
+  border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--surface); padding: 1.5rem;
+  margin-bottom: 1.5rem; box-shadow: var(--shadow);
+}
+.res-intro-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: .5rem; }
+.res-intro-text { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+.res-intro-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.res-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1px solid var(--accent); border-radius: var(--rsm);
+  background: rgba(124,58,237,.08); color: var(--accent);
+  font-size: 13px; text-decoration: none; font-weight: 500;
+  transition: all .15s;
+}
+.res-btn:hover { background: rgba(124,58,237,.15); }
+
+.res-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; }
+.res-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--rsm);
+  background: var(--surface);
+}
+.res-lesson { display: flex; align-items: center; gap: 10px; }
+.res-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--surface2); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.res-topic { font-size: 13px; color: var(--text); }
+.res-link {
+  font-size: 12px; color: var(--accent); text-decoration: none;
+  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
+  transition: all .12s; white-space: nowrap;
+}
+.res-link:hover { border-color: var(--accent); background: rgba(124,58,237,.08); }
+.res-link-disabled { color: var(--hint); pointer-events: none; }
+
+.res-footer {
+  font-size: 11px; color: var(--hint); line-height: 1.6;
+  padding-top: 1rem; border-top: 1px solid var(--border);
+}
