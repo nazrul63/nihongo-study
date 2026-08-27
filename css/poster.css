@@ -1,0 +1,74 @@
+/* ═══════════════════════════════════════════════════════
+   poster.css — append to style.css or link separately
+   ═══════════════════════════════════════════════════════ */
+
+.poster-toolbar { margin-bottom: 1rem; }
+
+.list-view-toggle {
+  display: inline-flex; gap: 4px; margin-bottom: 1rem; margin-right: 10px;
+}
+.lv-btn {
+  padding: 6px 14px; border: 1px solid var(--border2); border-radius: var(--rsm);
+  background: transparent; color: var(--muted); cursor: pointer; font-size: 12px;
+  transition: all .12s;
+}
+.lv-btn:hover { background: var(--surface2); color: var(--text); }
+.lv-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.poster-sheet {
+  background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius);
+  padding: 1.75rem; box-shadow: var(--shadow);
+}
+
+.poster-title {
+  text-align: center; font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.poster-sparkle { color: var(--accent); font-size: 16px; }
+
+.poster-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px; margin-bottom: 1.5rem;
+}
+
+.poster-box {
+  border: 2px solid; border-radius: 14px; overflow: hidden;
+}
+.poster-box-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px; color: #fff; font-weight: 600; font-size: 13px;
+}
+.poster-icon { font-size: 16px; }
+.poster-group-name { letter-spacing: .3px; }
+
+.poster-word-list { padding: 10px 14px; display: flex; flex-direction: column; gap: 5px; }
+.poster-word-row {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  font-size: 13px; padding: 3px 0; border-bottom: 1px dashed rgba(0,0,0,.08);
+}
+.poster-word-row:last-child { border-bottom: none; }
+.poster-jp { font-size: 15px; font-weight: 600; color: #2a2a35; }
+.poster-kj { font-size: 11px; color: #6a6a78; }
+.poster-en { font-size: 12px; color: #4a4a58; margin-left: auto; text-align: right; }
+
+.poster-footer {
+  text-align: center; font-size: 14px; color: var(--muted);
+  padding-top: 1rem; border-top: 1px dashed var(--border2);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.poster-star { color: #e0568b; }
+
+/* ── Print: force light backgrounds regardless of dark mode ── */
+@media print {
+  .poster-toolbar, .list-view-toggle { display: none !important; }
+  .poster-sheet { box-shadow: none; border: none; background: #fff; }
+  .poster-title, .poster-footer { color: #222; }
+  .poster-jp { color: #1a1a1a; }
+  .poster-en, .poster-kj { color: #444; }
+  .poster-grid { break-inside: avoid; }
+  .poster-box { break-inside: avoid; page-break-inside: avoid; }
+}
+
+@media (max-width: 700px) {
+  .poster-grid { grid-template-columns: 1fr; }
+}

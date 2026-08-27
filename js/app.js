@@ -10,6 +10,7 @@ const LESSON_TABS = `
     <button class="mode-tab" data-mode="sentences" onclick="switchMode('sentences')">💬 Sentences</button>
     <button class="mode-tab" data-mode="quiz"      onclick="switchMode('quiz')">✏️ Quiz</button>
     <button class="mode-tab" data-mode="list"      onclick="switchMode('list')">📋 Word list</button>
+    <button class="mode-tab" data-mode="poster"    onclick="switchMode('poster')">🎴 Poster</button>
     <button class="mode-tab" data-mode="exercises" onclick="switchMode('exercises')">🎯 Exercises</button>
     <button class="mode-tab" data-mode="practice" onclick="switchMode('practice')">🎯 Practice</button>
   </div>`;
@@ -159,7 +160,7 @@ function setTab(mode) {
 function switchMode(mode) { setTab(mode); renderMode(); }
 function renderMode() {
   // const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises };
-  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, exercises:renderExercises, practice:renderPractice };
+  const map = { flashcard:renderFlashcard, kanji:renderKanji, sentences:renderSentences, quiz:renderQuiz, list:renderList, poster:renderPoster, exercises:renderExercises, practice:renderPractice };
   (map[S.mode] || (() => {}))();
 }
 
@@ -538,6 +539,84 @@ function renderList() {
     html += `</div></div>`;
   });
   ma().innerHTML = html;
+}
+
+/* Color palette — cycles through categories in a stable order */
+const POSTER_COLORS = [
+  { bg:'#fde8ef', border:'#f4a6c1', header:'#e0568b' }, // pink
+  { bg:'#e8f0fd', border:'#a6c3f4', header:'#3a6fd8' }, // blue
+  { bg:'#e8fdf0', border:'#a6f4c3', header:'#2ea86c' }, // green
+  { bg:'#fdf6e8', border:'#f4d9a6', header:'#c98a1a' }, // amber
+  { bg:'#f3e8fd', border:'#c9a6f4', header:'#8a3ad8' }, // purple
+  { bg:'#fdece8', border:'#f4b3a6', header:'#d85a3a' }, // coral
+  { bg:'#e8fdfb', border:'#a6f0e8', header:'#1a9e8f' }, // teal
+  { bg:'#fdfbe8', border:'#eef0a6', header:'#a8a01a' }, // olive
+];
+
+const POSTER_ICONS = {
+  // Fallback icon guesses by keyword — falls back to 📝 if no match
+  'adjective':'✨','い-adjective':'✨','な-adjective':'💫',
+  'noun':'📦','verb':'🏃','phrase':'💬','phrases':'💬',
+  'question':'❓','q-word':'❓','colors':'🎨','color':'🎨',
+  'people':'👥','place':'📍','food':'🍚','drink':'🥤',
+  'time':'⏰','date':'📅','number':'🔢','size':'📏',
+  'transport':'🚃','family':'👪','animal':'🐾','body':'🖐️',
+};
+
+function posterIconFor(groupName) {
+  const key = Object.keys(POSTER_ICONS).find(k => groupName.toLowerCase().includes(k));
+  return key ? POSTER_ICONS[key] : '📝';
+}
+
+function renderPoster() {
+  const l = LessonRegistry.get(S.lessonId);
+  if (!l || !l.vocab || !l.vocab.length) {
+    ma().innerHTML = '<div class="empty"><div class="big">🎴</div><p>No vocabulary to show yet.</p></div>';
+    return;
+  }
+
+  const byGroup = {};
+  l.vocab.forEach(v => { (byGroup[v.group] = byGroup[v.group] || []).push(v); });
+  const groupNames = Object.keys(byGroup);
+
+  const boxes = groupNames.map((g, i) => {
+    const c = POSTER_COLORS[i % POSTER_COLORS.length];
+    const icon = posterIconFor(g);
+    const words = byGroup[g];
+    return `
+      <div class="poster-box" style="background:${c.bg}; border-color:${c.border};">
+        <div class="poster-box-header" style="background:${c.header};">
+          <span class="poster-icon">${icon}</span>
+          <span class="poster-group-name">${g}</span>
+        </div>
+        <div class="poster-word-list">
+          ${words.map(w => `
+            <div class="poster-word-row">
+              <span class="poster-jp">${w.jp}</span>
+              ${w.kj ? `<span class="poster-kj">${w.kj}</span>` : ''}
+              <span class="poster-en">${w.en}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  ma().innerHTML = `
+    <div class="poster-toolbar">
+      <button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+    </div>
+    <div class="poster-sheet">
+      <div class="poster-title">
+        <span class="poster-sparkle">✿</span>
+        ${l.title} — ${l.topic}
+        <span class="poster-sparkle">✿</span>
+      </div>
+      <div class="poster-grid">${boxes}</div>
+      <div class="poster-footer">
+        <span class="poster-star">★</span>
+        今日も少しずつ、頑張りましょう！
+        <span class="poster-star">★</span>
+      </div>
+    </div>`;
 }
 
 /* ===================== THEME ===================== */
