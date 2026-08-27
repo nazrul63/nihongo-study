@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   css/n4.css — styles for the N4 道場 section only.
+
+   Every rule is scoped under .n4-root and every custom property is prefixed
+   --n4-* so nothing here leaks into the lesson pages or the Repository. The
+   N4 section renders inside #mode-area as <div class="n4-root"> … </div>.
+   Palette: aizome indigo + vermilion hanko + celadon, on warm paper.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.n4-root {
+  --n4-paper: #EEF0EA;
+  --n4-paper-2: #F6F7F2;
+  --n4-card: #FBFBF7;
+  --n4-ink: #1C2E4A;          /* aizome indigo */
+  --n4-ink-soft: #4A566B;
+  --n4-ink-faint: #8A93A3;
+  --n4-line: #DDE0D6;
+  --n4-shu: #C8362A;          /* vermilion / hanko red */
+  --n4-shu-soft: #e9d3cf;
+  --n4-celadon: #5F8574;      /* mastery / "learned" */
+  --n4-celadon-soft: #d8e4dd;
+  --n4-gold: #B08428;
+  --n4-radius: 14px;
+  --n4-shadow: 0 1px 2px rgba(28, 46, 74, .06), 0 8px 24px rgba(28, 46, 74, .06);
+
+  color: var(--n4-ink);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.n4-root * { box-sizing: border-box; }
+.n4-root .mincho,
+.n4-root .jp { font-family: "Shippori Mincho", serif; }
+.n4-root button { font-family: inherit; cursor: pointer; }
+
+/* ---------- Panels & headings ---------- */
+.n4-root .panel {
+  background: var(--n4-card); border: 1px solid var(--n4-line); border-radius: var(--n4-radius);
+  box-shadow: var(--n4-shadow); padding: 22px;
+}
+.n4-root .grid { display: grid; gap: 16px; }
+@media (min-width: 760px) {
+  .n4-root .grid.cols-3 { grid-template-columns: 1.15fr .95fr .95fr; }
+  .n4-root .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+}
+.n4-root h2.section { font-family: "Shippori Mincho", serif; font-size: 20px; margin: 2px 0 2px; font-weight: 700; }
+.n4-root .eyebrow { font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--n4-ink-faint); font-weight: 700; }
+.n4-root .muted { color: var(--n4-ink-soft); }
+.n4-root .faint { color: var(--n4-ink-faint); }
+
+/* ---------- Countdown + streak ---------- */
+.n4-root .today-head { display: flex; gap: 16px; flex-wrap: wrap; align-items: stretch; margin-bottom: 16px; }
+.n4-root .countdown {
+  flex: 1 1 260px; background: var(--n4-ink); color: #eef0ea; border-radius: var(--n4-radius);
+  padding: 20px 22px; position: relative; overflow: hidden; box-shadow: var(--n4-shadow);
+}
+.n4-root .countdown .big { font-family: "Shippori Mincho", serif; font-size: 56px; line-height: 1; font-weight: 800; }
+.n4-root .countdown .lbl { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #9fb0cc; margin-top: 6px; }
+.n4-root .countdown .date { margin-top: 12px; font-size: 13px; color: #c3d0e4; }
+.n4-root .countdown .wk { margin-top: 2px; font-size: 13px; color: #c3d0e4; }
+.n4-root .countdown::after { content: "試"; position: absolute; right: -6px; bottom: -22px; font-family: "Shippori Mincho", serif; font-size: 120px; color: rgba(255, 255, 255, .05); font-weight: 800; }
+
+.n4-root .seal {
+  flex: 0 0 auto; width: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--n4-card); border: 1px solid var(--n4-line); border-radius: var(--n4-radius); padding: 14px; box-shadow: var(--n4-shadow);
+}
+.n4-root .stamp {
+  width: 104px; height: 104px; border-radius: 50%;
+  border: 3px solid var(--n4-shu); color: var(--n4-shu);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: rotate(-6deg); box-shadow: inset 0 0 0 4px rgba(200, 54, 42, .10); position: relative;
+}
+.n4-root .stamp.dim { border-color: var(--n4-ink-faint); color: var(--n4-ink-faint); box-shadow: inset 0 0 0 4px rgba(138, 147, 163, .08); }
+.n4-root .stamp .n { font-family: "Shippori Mincho", serif; font-size: 40px; font-weight: 800; line-height: 1; }
+.n4-root .stamp .d { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.n4-root .seal .cap { margin-top: 10px; font-size: 11px; letter-spacing: .4px; color: var(--n4-ink-soft); text-align: center; font-weight: 600; }
+
+/* ---------- Stat cards ---------- */
+.n4-root .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 2px; }
+.n4-root .stat { background: var(--n4-paper-2); border: 1px solid var(--n4-line); border-radius: 12px; padding: 14px; }
+.n4-root .stat .k { font-size: 11px; letter-spacing: .5px; text-transform: uppercase; color: var(--n4-ink-faint); font-weight: 700; }
+.n4-root .stat .v { font-family: "Shippori Mincho", serif; font-size: 30px; font-weight: 800; margin-top: 4px; }
+.n4-root .stat .v small { font-size: 14px; color: var(--n4-ink-faint); font-weight: 600; font-family: "Inter"; }
+
+/* ---------- Ring ---------- */
+.n4-root .rings { display: flex; gap: 18px; flex-wrap: wrap; justify-content: space-around; }
+.n4-root .ring { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1 1 90px; }
+.n4-root .ring .dial { width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; position: relative; }
+.n4-root .ring .dial .inner { width: 66px; height: 66px; background: var(--n4-card); border-radius: 50%; display: grid; place-items: center; text-align: center; }
+.n4-root .ring .dial .pct { font-family: "Shippori Mincho", serif; font-weight: 800; font-size: 19px; line-height: 1; }
+.n4-root .ring .dial .of { font-size: 10px; color: var(--n4-ink-faint); margin-top: 1px; }
+.n4-root .ring .name { font-size: 12px; font-weight: 600; color: var(--n4-ink-soft); letter-spacing: .3px; }
+
+/* ---------- Buttons ---------- */
+.n4-root .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid var(--n4-ink); background: var(--n4-ink); color: #f4f6f1;
+  padding: 11px 18px; border-radius: 11px; font-size: 14px; font-weight: 600; letter-spacing: .2px;
+  transition: transform .08s ease, box-shadow .15s, background .15s;
+}
+.n4-root .btn:hover { box-shadow: 0 6px 18px rgba(28, 46, 74, .18); }
+.n4-root .btn:active { transform: translateY(1px); }
+.n4-root .btn.shu { background: var(--n4-shu); border-color: var(--n4-shu); color: #fff; }
+.n4-root .btn.ghost { background: transparent; color: var(--n4-ink); border-color: var(--n4-line); }
+.n4-root .btn.ghost:hover { border-color: var(--n4-ink); box-shadow: none; }
+.n4-root .btn.sm { padding: 8px 13px; font-size: 13px; }
+.n4-root .btn.block { width: 100%; }
+.n4-root .btn:disabled { opacity: .4; cursor: not-allowed; }
+.n4-root .btnrow { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- Pills & tags ---------- */
+.n4-root .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--n4-line); color: var(--n4-ink-soft); background: var(--n4-paper-2); }
+.n4-root .lvtag { font-size: 10px; font-weight: 700; letter-spacing: .5px; padding: 2px 7px; border-radius: 999px; border: 1px solid transparent; }
+.n4-root .lvtag.N5 { background: var(--n4-celadon-soft); color: #3f5d50; border-color: #bcd3c8; }
+.n4-root .lvtag.N4 { background: #dbe4f0; color: var(--n4-ink); border-color: #c2d0e4; }
+.n4-root .pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+.n4-root .dot.shu { background: var(--n4-shu); }
+.n4-root .dot.cel { background: var(--n4-celadon); }
+.n4-root .dot.ink { background: var(--n4-ink); }
+
+/* ---------- Learn / Review card ---------- */
+.n4-root .study-stage { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 320px; justify-content: center; gap: 6px; padding: 10px; }
+.n4-root .kanji-big { font-family: "Shippori Mincho", serif; font-size: 120px; line-height: 1; font-weight: 700; color: var(--n4-ink); }
+.n4-root .word-big { font-family: "Shippori Mincho", serif; font-size: 56px; font-weight: 700; color: var(--n4-ink); }
+.n4-root .grammar-big { font-family: "Shippori Mincho", serif; font-size: 40px; font-weight: 700; color: var(--n4-ink); }
+.n4-root .reading { font-size: 20px; color: var(--n4-shu); font-weight: 600; margin-top: 4px; }
+.n4-root .meaning { font-size: 20px; color: var(--n4-ink); font-weight: 600; }
+.n4-root .detail { color: var(--n4-ink-soft); font-size: 15px; max-width: 520px; }
+.n4-root .detail b { color: var(--n4-ink); }
+.n4-root .ex { margin-top: 10px; background: var(--n4-paper-2); border: 1px solid var(--n4-line); border-radius: 12px; padding: 12px 16px; max-width: 560px; }
+.n4-root .ex .exjp { font-family: "Shippori Mincho", serif; font-size: 20px; }
+.n4-root .ex .extr { font-size: 13px; color: var(--n4-ink-soft); margin-top: 3px; }
+.n4-root .prog-strip { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.n4-root .bar { flex: 1; height: 8px; background: var(--n4-line); border-radius: 99px; overflow: hidden; }
+.n4-root .bar > span { display: block; height: 100%; background: var(--n4-shu); }
+.n4-root .cat-select { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.n4-root .chip { border: 1px solid var(--n4-line); background: var(--n4-paper-2); color: var(--n4-ink-soft); border-radius: 999px; padding: 8px 15px; font-size: 13px; font-weight: 600; }
+.n4-root .chip[aria-pressed="true"] { background: var(--n4-ink); color: #f4f6f1; border-color: var(--n4-ink); }
+
+/* ---------- Quiz ---------- */
+.n4-root .q-prompt { font-family: "Shippori Mincho", serif; font-size: 52px; text-align: center; margin: 8px 0 4px; font-weight: 700; }
+.n4-root .q-sub { text-align: center; color: var(--n4-ink-soft); font-size: 14px; margin-bottom: 18px; }
+.n4-root .opts { display: grid; gap: 10px; }
+@media (min-width: 620px) { .n4-root .opts { grid-template-columns: 1fr 1fr; } }
+.n4-root .opt {
+  text-align: left; border: 1px solid var(--n4-line); background: var(--n4-card); color: var(--n4-ink);
+  padding: 14px 16px; border-radius: 12px; font-size: 16px; font-weight: 500; transition: border .12s, background .12s;
+}
+.n4-root .opt:hover { border-color: var(--n4-ink); }
+.n4-root .opt.correct { border-color: var(--n4-celadon); background: var(--n4-celadon-soft); }
+.n4-root .opt.wrong { border-color: var(--n4-shu); background: var(--n4-shu-soft); }
+.n4-root .opt:disabled { cursor: default; }
+.n4-root .opt .jp { font-family: "Shippori Mincho", serif; }
+
+/* ---------- Progress ---------- */
+.n4-root .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-width: 340px; }
+.n4-root .cal .cell { aspect-ratio: 1; border-radius: 5px; background: var(--n4-paper-2); border: 1px solid var(--n4-line); }
+.n4-root .cal .cell.l1 { background: #d6e2db; border-color: #c3d4cb; }
+.n4-root .cal .cell.l2 { background: #a9c6ba; border-color: #93b6a7; }
+.n4-root .cal .cell.l3 { background: var(--n4-celadon); border-color: var(--n4-celadon); }
+.n4-root .cal .cell.today { outline: 2px solid var(--n4-shu); outline-offset: 1px; }
+.n4-root .weekbars { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-top: 8px; }
+.n4-root .weekbars .wb { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; justify-content: flex-end; height: 100%; }
+.n4-root .weekbars .wb .col { width: 70%; background: var(--n4-ink); border-radius: 5px 5px 0 0; min-height: 3px; }
+.n4-root .weekbars .wb .wl { font-size: 10px; color: var(--n4-ink-faint); font-weight: 600; }
+.n4-root .plan-list { display: flex; flex-direction: column; gap: 2px; }
+.n4-root .plan-row { display: flex; gap: 12px; align-items: flex-start; padding: 9px 10px; border-radius: 10px; }
+.n4-root .plan-row.now { background: var(--n4-paper-2); border: 1px solid var(--n4-line); }
+.n4-root .plan-row .wknum { font-family: "Shippori Mincho", serif; font-weight: 800; color: var(--n4-ink-faint); width: 30px; flex: 0 0 30px; font-size: 15px; }
+.n4-root .plan-row.now .wknum { color: var(--n4-shu); }
+.n4-root .plan-row .wkbody { flex: 1; }
+.n4-root .plan-row .wkdate { font-size: 11px; color: var(--n4-ink-faint); font-weight: 600; letter-spacing: .3px; }
+.n4-root .plan-row .wkgoal { font-size: 14px; color: var(--n4-ink); }
+.n4-root .plan-row input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--n4-shu); }
+
+/* ---------- Data / settings ---------- */
+.n4-root textarea { width: 100%; min-height: 150px; border: 1px solid var(--n4-line); border-radius: 12px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--n4-ink); background: var(--n4-paper-2); resize: vertical; }
+.n4-root .note { font-size: 13px; color: var(--n4-ink-soft); background: var(--n4-paper-2); border: 1px solid var(--n4-line); border-left: 3px solid var(--n4-gold); border-radius: 8px; padding: 12px 14px; }
+.n4-root code { background: var(--n4-paper-2); border: 1px solid var(--n4-line); border-radius: 5px; padding: 1px 5px; font-size: 12px; }
+.n4-root .empty { text-align: center; padding: 40px 10px; color: var(--n4-ink-soft); }
+.n4-root .empty .big { font-family: "Shippori Mincho", serif; font-size: 44px; color: var(--n4-celadon); margin-bottom: 8px; }
+.n4-root .hide { display: none !important; }
+.n4-root hr.soft { border: none; border-top: 1px solid var(--n4-line); margin: 18px 0; }
+.n4-root .kv { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed var(--n4-line); }
+.n4-root .kv:last-child { border-bottom: none; }
+.n4-root :focus-visible { outline: 2px solid var(--n4-shu); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- Toast (rendered inside .n4-root) ---------- */
+.n4-root .toast {
+  position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+  background: var(--n4-ink); color: #f4f6f1; padding: 11px 20px; border-radius: 11px; font-size: 14px; font-weight: 600;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; box-shadow: 0 10px 30px rgba(28, 46, 74, .3); z-index: 50;
+}
+.n4-root .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (prefers-reduced-motion: reduce) { .n4-root * { transition: none !important; } }

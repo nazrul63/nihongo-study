@@ -109,6 +109,8 @@ function buildSidebar() {
   const isRepo = S.lessonId === '__repo__';
   const rb = $('repo-btn');
   if (rb) rb.classList.toggle('active', isRepo);
+  const nb = $('n4-btn');                                   // N4 section button
+  if (nb) nb.classList.toggle('active', S.lessonId === '__n4__');
   lessons.forEach(l => {
     const st = Store.load(l.id);
     const pct = l.vocab.length ? Math.round(st.known.length / l.vocab.length * 100) : 0;
@@ -757,6 +759,8 @@ function openRepository() {
   document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
   const rb = $('repo-btn');
   if (rb) rb.classList.add('active');
+  const nb = $('n4-btn');                                   // leaving N4 for Repository
+  if (nb) nb.classList.remove('active');
 
   $('lesson-title').textContent   = 'じしょ Repository';
   $('lesson-topic').textContent   = 'All lessons · unified search · progress overview';

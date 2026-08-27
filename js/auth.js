@@ -21,7 +21,7 @@ function clearLocalProgress() {
   const toRemove = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && (k.startsWith('nhk_v_') || k.startsWith('nhk_q_'))) toRemove.push(k);
+    if (k && (k.startsWith('nhk_v_') || k.startsWith('nhk_q_') || k.startsWith('n4_'))) toRemove.push(k);
   }
   toRemove.forEach(k => localStorage.removeItem(k));
 }
@@ -36,6 +36,8 @@ const FireSync = {
       coll = 'vocab'; docId = localKey.replace('nhk_v_', '');
     } else if (localKey.startsWith('nhk_q_')) {
       coll = 'quiz';  docId = localKey.replace('nhk_q_', '');
+    } else if (localKey.startsWith('n4_')) {
+      coll = 'n4';    docId = localKey.replace('n4_', '');   // srs · log · planChecks · extra
     } else if (localKey === 'nhk_theme') {
       coll = 'settings'; docId = 'theme';
     } else return;
@@ -55,13 +57,15 @@ const FireSync = {
 
     const base = db.collection('users').doc(uid);
     try {
-      const [vocabSnap, quizSnap, themeDoc] = await Promise.all([
+      const [vocabSnap, quizSnap, n4Snap, themeDoc] = await Promise.all([
         base.collection('vocab').get(),
         base.collection('quiz').get(),
+        base.collection('n4').get(),
         base.collection('settings').doc('theme').get()
       ]);
       vocabSnap.forEach(d => localStorage.setItem(`nhk_v_${d.id}`, JSON.stringify(d.data())));
       quizSnap.forEach(d  => localStorage.setItem(`nhk_q_${d.id}`, JSON.stringify(d.data())));
+      n4Snap.forEach(d    => localStorage.setItem(`n4_${d.id}`,   JSON.stringify(d.data())));
       if (themeDoc.exists) {
         const t = themeDoc.data().value;
         localStorage.setItem('nhk_theme', t);
