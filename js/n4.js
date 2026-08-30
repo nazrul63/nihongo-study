@@ -41,6 +41,175 @@
   /* ── Content fallback (real content always arrives via N4_CONTENT/N4_VOCAB) ── */
   const SEED = { kanji: [], vocab: [], grammar: [] };
 
+  /* ── Example-sentence starter pack (keyed by vocab word) ──────────────────
+     The vocab data has no example sentences, so these are a hand-checked set of
+     simple, correct beginner sentences for the most common early words. Any
+     word not listed here simply shows no sentence yet. Merge more at runtime via
+     window.N4_VOCAB_EX = { "word": {ex, exr, exm} } loaded before this file. */
+  const VOCAB_EX = {
+    // Earliest words (plan days 0–2) so the feature shows from day one
+    'いい': { ex: 'いい天気ですね。',              exr: 'いい てんきですね。',                    exm: "It's nice weather, isn't it?" },
+    'いつ': { ex: 'テストはいつですか。',          exr: 'テストは いつですか。',                  exm: 'When is the test?' },
+    'いす': { ex: 'いすに座ってください。',        exr: 'いすに すわってください。',              exm: 'Please sit on the chair.' },
+    'ここ': { ex: 'トイレはここです。',            exr: 'トイレは ここです。',                    exm: 'The toilet is here.' },
+    'する': { ex: 'テニスをします。',              exr: 'テニスを します。',                      exm: 'I play tennis.' },
+    'どう': { ex: 'お茶はどうですか。',            exr: 'おちゃは どうですか。',                  exm: 'How about some tea?' },
+    'どこ': { ex: '駅はどこですか。',              exr: 'えきは どこですか。',                    exm: 'Where is the station?' },
+    'どれ': { ex: 'わたしの本はどれですか。',      exr: 'わたしの ほんは どれですか。',          exm: 'Which one is my book?' },
+    'ドア': { ex: 'ドアを開けてください。',        exr: 'ドアを あけてください。',                exm: 'Please open the door.' },
+    'なぜ': { ex: 'なぜ日本語を勉強しますか。',    exr: 'なぜ にほんごを べんきょうしますか。',  exm: 'Why do you study Japanese?' },
+    'はい': { ex: 'はい、そうです。',              exr: 'はい、そうです。',                        exm: "Yes, that's right." },
+    'ペン': { ex: 'ペンで名前を書きます。',        exr: 'ペンで なまえを かきます。',            exm: 'I write my name with a pen.' },
+    'ふろ': { ex: 'ふろに入ります。',              exr: 'ふろに はいります。',                    exm: 'I take a bath.' },
+    'まだ': { ex: '時間はまだあります。',          exr: 'じかんは まだ あります。',              exm: 'There is still time.' },
+    'もう': { ex: 'もう昼ごはんを食べました。',    exr: 'もう ひるごはんを たべました。',        exm: 'I already ate lunch.' },
+    // Common early-kanji words (weeks 1–6)
+    '本':   { ex: 'わたしは本を読みます。',        exr: 'わたしは ほんを よみます。',            exm: 'I read a book.' },
+    '水':   { ex: '水を飲みます。',                exr: 'みずを のみます。',                      exm: 'I drink water.' },
+    '学生': { ex: 'わたしは学生です。',            exr: 'わたしは がくせいです。',                exm: 'I am a student.' },
+    '先生': { ex: '田中さんは先生です。',          exr: 'たなかさんは せんせいです。',            exm: 'Mr. Tanaka is a teacher.' },
+    '車':   { ex: '車で行きます。',                exr: 'くるまで いきます。',                    exm: 'I go by car.' },
+    '食べる': { ex: '朝ごはんを食べます。',        exr: 'あさごはんを たべます。',                exm: 'I eat breakfast.' },
+    '飲む': { ex: 'コーヒーを飲みます。',          exr: 'コーヒーを のみます。',                  exm: 'I drink coffee.' },
+    '行く': { ex: '学校へ行きます。',              exr: 'がっこうへ いきます。',                  exm: 'I go to school.' },
+    '買う': { ex: 'パンを買います。',              exr: 'パンを かいます。',                      exm: 'I buy bread.' },
+    '書く': { ex: '名前を書きます。',              exr: 'なまえを かきます。',                    exm: 'I write my name.' },
+    '読む': { ex: '新聞を読みます。',              exr: 'しんぶんを よみます。',                  exm: 'I read a newspaper.' },
+    '大きい': { ex: '大きい犬です。',              exr: 'おおきい いぬです。',                    exm: 'It is a big dog.' },
+    '小さい': { ex: '小さい猫です。',              exr: 'ちいさい ねこです。',                    exm: 'It is a small cat.' },
+    '高い': { ex: 'この時計は高いです。',          exr: 'この とけいは たかいです。',            exm: 'This watch is expensive.' },
+    '安い': { ex: 'この本は安いです。',            exr: 'この ほんは やすいです。',              exm: 'This book is cheap.' },
+    '友達': { ex: '友達と話します。',              exr: 'ともだちと はなします。',                exm: 'I talk with a friend.' },
+    '時間': { ex: '時間がありません。',            exr: 'じかんが ありません。',                  exm: 'I have no time.' },
+    '毎日': { ex: '毎日日本語を勉強します。',      exr: 'まいにち にほんごを べんきょうします。', exm: 'I study Japanese every day.' },
+    '電車': { ex: '電車で会社へ行きます。',        exr: 'でんしゃで かいしゃへ いきます。',        exm: 'I go to work by train.' },
+    '会社': { ex: '会社で働きます。',              exr: 'かいしゃで はたらきます。',              exm: 'I work at a company.' },
+    '学校': { ex: '学校で勉強します。',            exr: 'がっこうで べんきょうします。',          exm: 'I study at school.' },
+    '家':   { ex: '家に帰ります。',                exr: 'いえに かえります。',                    exm: 'I go home.' },
+    '犬':   { ex: '犬が好きです。',                exr: 'いぬが すきです。',                      exm: 'I like dogs.' },
+    '猫':   { ex: '猫はかわいいです。',            exr: 'ねこは かわいいです。',                  exm: 'Cats are cute.' },
+    '名前': { ex: 'お名前は何ですか。',            exr: 'おなまえは なんですか。',                exm: 'What is your name?' },
+    '今日': { ex: '今日は金曜日です。',            exr: 'きょうは きんようびです。',              exm: 'Today is Friday.' },
+    '明日': { ex: '明日、京都へ行きます。',        exr: 'あした、きょうとへ いきます。',          exm: "Tomorrow I'll go to Kyoto." },
+    '雨':   { ex: '今日は雨です。',                exr: 'きょうは あめです。',                    exm: 'It is rainy today.' },
+    '朝':   { ex: '朝、コーヒーを飲みます。',      exr: 'あさ、コーヒーを のみます。',            exm: 'I drink coffee in the morning.' },
+    '駅':   { ex: '駅はどこですか。',              exr: 'えきは どこですか。',                    exm: 'Where is the station?' },
+    '飲み物': { ex: '飲み物を買います。',          exr: 'のみものを かいます。',                  exm: 'I buy a drink.' },
+    '食べ物': { ex: '日本の食べ物が好きです。',    exr: 'にほんの たべものが すきです。',        exm: 'I like Japanese food.' },
+    'お金': { ex: 'お金がありません。',            exr: 'おかねが ありません。',                  exm: 'I have no money.' },
+    // Common adjectives / na-adjectives
+    '新しい': { ex: '新しい車を買いました。', exr: 'あたらしい くるまを かいました。', exm: 'I bought a new car.' },
+    '古い':  { ex: 'この本は古いです。', exr: 'この ほんは ふるいです。', exm: 'This book is old.' },
+    '多い':  { ex: '東京は人が多いです。', exr: 'とうきょうは ひとが おおいです。', exm: 'Tokyo has a lot of people.' },
+    '早い':  { ex: '朝早く起きます。', exr: 'あさ はやく おきます。', exm: 'I get up early in the morning.' },
+    '近い':  { ex: '駅は家から近いです。', exr: 'えきは いえから ちかいです。', exm: 'The station is close to my house.' },
+    '暑い':  { ex: '今日はとても暑いです。', exr: 'きょうは とても あついです。', exm: "It's very hot today." },
+    '寒い':  { ex: '冬は寒いです。', exr: 'ふゆは さむいです。', exm: 'Winter is cold.' },
+    '忙しい': { ex: '今週は忙しいです。', exr: 'こんしゅうは いそがしいです。', exm: "I'm busy this week." },
+    '楽しい': { ex: 'パーティーは楽しかったです。', exr: 'パーティーは たのしかったです。', exm: 'The party was fun.' },
+    '難しい': { ex: 'この問題は難しいです。', exr: 'この もんだいは むずかしいです。', exm: 'This problem is difficult.' },
+    '好き':  { ex: '音楽が好きです。', exr: 'おんがくが すきです。', exm: 'I like music.' },
+    '嫌い':  { ex: '宿題が嫌いです。', exr: 'しゅくだいが きらいです。', exm: 'I dislike homework.' },
+    '上手':  { ex: '田中さんは日本語が上手です。', exr: 'たなかさんは にほんごが じょうずです。', exm: 'Tanaka is good at Japanese.' },
+    '下手':  { ex: 'わたしは料理が下手です。', exr: 'わたしは りょうりが へたです。', exm: "I'm bad at cooking." },
+    '便利':  { ex: 'この店は便利です。', exr: 'この みせは べんりです。', exm: 'This shop is convenient.' },
+    '有名':  { ex: 'この町は有名です。', exr: 'この まちは ゆうめいです。', exm: 'This town is famous.' },
+    '静か':  { ex: '図書館は静かです。', exr: 'としょかんは しずかです。', exm: 'The library is quiet.' },
+    'きれい': { ex: 'この部屋はきれいです。', exr: 'この へやは きれいです。', exm: 'This room is clean.' },
+    '元気':  { ex: '子どもは元気です。', exr: 'こどもは げんきです。', exm: 'The children are lively.' },
+    // Common nouns
+    '電話':  { ex: '友達に電話をかけます。', exr: 'ともだちに でんわを かけます。', exm: 'I call a friend.' },
+    '部屋':  { ex: '部屋に入ります。', exr: 'へやに はいります。', exm: 'I enter the room.' },
+    '病院':  { ex: '病院へ行きます。', exr: 'びょういんへ いきます。', exm: 'I go to the hospital.' },
+    '銀行':  { ex: '銀行はどこですか。', exr: 'ぎんこうは どこですか。', exm: 'Where is the bank?' },
+    '図書館': { ex: '図書館で勉強します。', exr: 'としょかんで べんきょうします。', exm: 'I study at the library.' },
+    '映画':  { ex: '映画を見ます。', exr: 'えいがを みます。', exm: 'I watch a movie.' },
+    '音楽':  { ex: '音楽を聞きます。', exr: 'おんがくを ききます。', exm: 'I listen to music.' },
+    '天気':  { ex: '今日はいい天気です。', exr: 'きょうは いい てんきです。', exm: 'The weather is nice today.' },
+    '果物':  { ex: '果物が好きです。', exr: 'くだものが すきです。', exm: 'I like fruit.' },
+    '野菜':  { ex: '野菜を食べます。', exr: 'やさいを たべます。', exm: 'I eat vegetables.' },
+    '肉':    { ex: '肉が好きです。', exr: 'にくが すきです。', exm: 'I like meat.' },
+    '魚':    { ex: '魚を食べます。', exr: 'さかなを たべます。', exm: 'I eat fish.' },
+    '手紙':  { ex: '母に手紙を書きます。', exr: 'ははに てがみを かきます。', exm: 'I write a letter to my mother.' },
+    '切符':  { ex: '切符を買います。', exr: 'きっぷを かいます。', exm: 'I buy a ticket.' },
+    '傘':    { ex: '傘がありません。', exr: 'かさが ありません。', exm: "I don't have an umbrella." },
+    '時計':  { ex: 'この時計は高いです。', exr: 'この とけいは たかいです。', exm: 'This watch is expensive.' },
+    '仕事':  { ex: '仕事が忙しいです。', exr: 'しごとが いそがしいです。', exm: 'Work is busy.' },
+    '写真':  { ex: '写真を撮ります。', exr: 'しゃしんを とります。', exm: 'I take a photo.' },
+    '料理':  { ex: '母は料理が上手です。', exr: 'ははは りょうりが じょうずです。', exm: 'My mother is good at cooking.' },
+    '買い物': { ex: 'スーパーで買い物します。', exr: 'スーパーで かいものします。', exm: 'I shop at the supermarket.' },
+    '散歩':  { ex: '公園を散歩します。', exr: 'こうえんを さんぽします。', exm: 'I take a walk in the park.' },
+    '勉強':  { ex: '毎日日本語を勉強します。', exr: 'まいにち にほんごを べんきょうします。', exm: 'I study Japanese every day.' },
+    // Common verbs
+    '起きる': { ex: '毎朝六時に起きます。', exr: 'まいあさ ろくじに おきます。', exm: 'I get up at six every morning.' },
+    '寝る':  { ex: '十一時に寝ます。', exr: 'じゅういちじに ねます。', exm: 'I go to bed at eleven.' },
+    '働く':  { ex: '会社で働きます。', exr: 'かいしゃで はたらきます。', exm: 'I work at a company.' },
+    '休む':  { ex: '日曜日は休みます。', exr: 'にちようびは やすみます。', exm: 'I rest on Sundays.' },
+    '会う':  { ex: '友達に会います。', exr: 'ともだちに あいます。', exm: 'I meet a friend.' },
+    '待つ':  { ex: 'バスを待ちます。', exr: 'バスを まちます。', exm: 'I wait for the bus.' },
+    '歩く':  { ex: '学校まで歩きます。', exr: 'がっこうまで あるきます。', exm: 'I walk to school.' },
+    '走る':  { ex: '毎朝走ります。', exr: 'まいあさ はしります。', exm: 'I run every morning.' },
+    '乗る':  { ex: '電車に乗ります。', exr: 'でんしゃに のります。', exm: 'I get on the train.' },
+    '降りる': { ex: '次の駅で降ります。', exr: 'つぎの えきで おります。', exm: 'I get off at the next station.' },
+    '作る':  { ex: '夕ごはんを作ります。', exr: 'ゆうごはんを つくります。', exm: 'I make dinner.' },
+    '使う':  { ex: 'はしを使います。', exr: 'はしを つかいます。', exm: 'I use chopsticks.' },
+    '住む':  { ex: '東京に住んでいます。', exr: 'とうきょうに すんでいます。', exm: 'I live in Tokyo.' },
+    '開ける': { ex: '窓を開けます。', exr: 'まどを あけます。', exm: 'I open the window.' },
+    '閉める': { ex: 'ドアを閉めます。', exr: 'ドアを しめます。', exm: 'I close the door.' }
+  };
+
+  /* ── Kanji example sentences (curated, keyed by character) ─────────────────
+     The kanji cards already show an example word; these add a full sentence for
+     the most common kanji so you see the character used in context. Extend with
+     window.N4_KANJI_SENT = { "字": {ja, r, m} } loaded before this file. */
+  const KANJI_SENT_BASE = {
+    '日': { ja: '今日はいい日ですね。', r: 'きょうは いい ひですね。', m: "It's a nice day today, isn't it?" },
+    '一': { ja: 'パンを一つ食べます。', r: 'パンを ひとつ たべます。', m: 'I eat one piece of bread.' },
+    '二': { ja: '二時に会いましょう。', r: 'にじに あいましょう。', m: "Let's meet at two o'clock." },
+    '三': { ja: '三人で行きます。', r: 'さんにんで いきます。', m: 'The three of us will go.' },
+    '四': { ja: '四月に日本へ来ました。', r: 'しがつに にほんへ きました。', m: 'I came to Japan in April.' },
+    '五': { ja: '五時に帰ります。', r: 'ごじに かえります。', m: 'I go home at five.' },
+    '六': { ja: '毎朝六時に起きます。', r: 'まいあさ ろくじに おきます。', m: 'I get up at six every morning.' },
+    '七': { ja: '七時に家を出ます。', r: 'しちじに いえを でます。', m: 'I leave home at seven.' },
+    '八': { ja: '八月はとても暑いです。', r: 'はちがつは とても あついです。', m: 'August is very hot.' },
+    '九': { ja: '九時に店が開きます。', r: 'くじに みせが あきます。', m: 'The shop opens at nine.' },
+    '十': { ja: '十時に寝ます。', r: 'じゅうじに ねます。', m: 'I go to bed at ten.' },
+    '人': { ja: 'あの人は先生です。', r: 'あの ひとは せんせいです。', m: 'That person is a teacher.' },
+    '大': { ja: '大きい犬がいます。', r: 'おおきい いぬが います。', m: 'There is a big dog.' },
+    '小': { ja: '小さい部屋です。', r: 'ちいさい へやです。', m: "It's a small room." },
+    '中': { ja: 'かばんの中に本があります。', r: 'かばんの なかに ほんが あります。', m: 'There is a book in the bag.' },
+    '上': { ja: '机の上にペンがあります。', r: 'つくえの うえに ペンが あります。', m: 'There is a pen on the desk.' },
+    '下': { ja: 'いすの下に猫がいます。', r: 'いすの したに ねこが います。', m: 'There is a cat under the chair.' },
+    '本': { ja: '毎日本を読みます。', r: 'まいにち ほんを よみます。', m: 'I read a book every day.' },
+    '月': { ja: '月がきれいです。', r: 'つきが きれいです。', m: 'The moon is beautiful.' },
+    '山': { ja: 'あの山は高いです。', r: 'あの やまは たかいです。', m: 'That mountain is tall.' },
+    '川': { ja: '川で泳ぎます。', r: 'かわで およぎます。', m: 'I swim in the river.' },
+    '水': { ja: '水を飲みます。', r: 'みずを のみます。', m: 'I drink water.' },
+    '金': { ja: 'お金がありません。', r: 'おかねが ありません。', m: 'I have no money.' },
+    '学': { ja: '大学で勉強します。', r: 'だいがくで べんきょうします。', m: 'I study at university.' },
+    '校': { ja: '学校へ行きます。', r: 'がっこうへ いきます。', m: 'I go to school.' },
+    '生': { ja: 'わたしは学生です。', r: 'わたしは がくせいです。', m: 'I am a student.' },
+    '先': { ja: '先生に聞きます。', r: 'せんせいに ききます。', m: 'I ask the teacher.' },
+    '名': { ja: 'お名前は何ですか。', r: 'おなまえは なんですか。', m: 'What is your name?' },
+    '気': { ja: 'お元気ですか。', r: 'おげんきですか。', m: 'How are you?' },
+    '目': { ja: '目が大きいです。', r: 'めが おおきいです。', m: 'The eyes are big.' },
+    '手': { ja: '手を洗います。', r: 'てを あらいます。', m: 'I wash my hands.' },
+    '口': { ja: '口を開けてください。', r: 'くちを あけてください。', m: 'Please open your mouth.' },
+    '子': { ja: '子どもが二人います。', r: 'こどもが ふたり います。', m: 'There are two children.' },
+    '女': { ja: '女の子がいます。', r: 'おんなのこが います。', m: 'There is a girl.' },
+    '男': { ja: '男の人がいます。', r: 'おとこのひとが います。', m: 'There is a man.' },
+    '年': { ja: '来年日本へ行きます。', r: 'らいねん にほんへ いきます。', m: 'Next year I will go to Japan.' },
+    '出': { ja: '七時に家を出ます。', r: 'しちじに いえを でます。', m: 'I leave home at seven.' },
+    '入': { ja: '部屋に入ります。', r: 'へやに はいります。', m: 'I enter the room.' },
+    '立': { ja: '立ってください。', r: 'たってください。', m: 'Please stand up.' },
+    '見': { ja: '映画を見ます。', r: 'えいがを みます。', m: 'I watch a movie.' },
+    '円': { ja: 'これは百円です。', r: 'これは ひゃくえんです。', m: 'This is 100 yen.' },
+    '百': { ja: '学生が百人います。', r: 'がくせいが ひゃくにん います。', m: 'There are 100 students.' },
+    '町': { ja: 'この町は静かです。', r: 'この まちは しずかです。', m: 'This town is quiet.' },
+    '力': { ja: '力が強いです。', r: 'ちからが つよいです。', m: 'He is strong.' }
+  };
+  const KANJI_SENT = Object.assign({}, KANJI_SENT_BASE, (typeof window !== 'undefined' && window.N4_KANJI_SENT) || {});
+
   /* ── 15-week plan (to December 6, 2026) ── */
   const EXAM = new Date('2026-12-06T09:00:00');
   const PLAN = [
@@ -69,6 +238,46 @@
   function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
   function uid(type, idx) { return type[0] + '_' + idx; }
   function toast(msg) { const t = $('#n4-toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 1800); }
+
+  /* ── Audio (Japanese TTS) — self-contained, prefers the Kyoko voice ──
+     Kept independent of app.js so nothing here depends on cross-script load order.
+     Every path is wrapped so a speaker press can never throw. ── */
+  let _voices = [];
+  function loadVoices() { try { if ('speechSynthesis' in window) _voices = window.speechSynthesis.getVoices(); } catch (_) {} }
+  if ('speechSynthesis' in window) { loadVoices(); try { window.speechSynthesis.addEventListener('voiceschanged', loadVoices); } catch (_) {} }
+  function bestVoice() {
+    const v = _voices || [];
+    return v.find(x => x.name === 'Kyoko')
+        || v.find(x => x.name === 'Otoya')
+        || v.find(x => x.lang === 'ja-JP' && x.localService)
+        || v.find(x => x.lang === 'ja-JP')
+        || v.find(x => x.lang && x.lang.startsWith('ja'))
+        || null;
+  }
+  /* Strip okurigana markers so a bare reading speaks cleanly:
+     "で(る)"→"でる", "ひと-"→"ひと", "セ・セイ"→"セ セイ". */
+  function cleanReading(r) { return (r || '').replace(/[()（）\-]/g, '').replace(/[・･]/g, ' ').trim(); }
+  function speak(text, slow) {
+    try {
+      const clean = (text || '').replace(/^〜/, '').trim();
+      if (!clean) return;
+      if (!('speechSynthesis' in window)) { toast('This browser has no speech support'); return; }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(clean);
+      u.lang = 'ja-JP';
+      u.rate = slow ? 0.6 : 0.85;
+      const vo = bestVoice(); if (vo) u.voice = vo;
+      window.speechSynthesis.speak(u);
+    } catch (_) { /* never let audio break the UI */ }
+  }
+  /* A small round 🔊 button carrying its phrase in data-speak (wired in render). */
+  function spk(text, title) {
+    const t = (text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!t) return '';
+    return `<button type="button" class="n4-spk" data-speak="${t}"${title ? ` title="${title}"` : ' title="Play sound"'} aria-label="Play pronunciation">🔊</button>`;
+  }
+  /* Speaker for a reading (skips empty "—" entries and cleans okurigana). */
+  function spkReading(r) { const c = cleanReading(r); return (!c || c === '—') ? '' : spk(c, 'Hear this reading'); }
 
   /* Leitner intervals by box */
   const INTERVAL = { 1: 1, 2: 2, 3: 4, 4: 7, 5: 14, 6: 30, 7: 60 };
@@ -105,6 +314,12 @@
       if (type === 'vocab' && window.N4_VOCAB && window.N4_VOCAB.length) baseArr = window.N4_VOCAB;
       const all = baseArr.concat(extra[type] || []);
       content[type] = all.map((it, i) => Object.assign({ id: uid(type, i), type, idx: i, day: dayIndexOf(type, i, all.length) }, it));
+    });
+    // Attach example sentences to vocab (curated pack + any runtime-loaded pack),
+    // without overriding a sentence the item may already carry.
+    const exMap = Object.assign({}, VOCAB_EX, window.N4_VOCAB_EX || {});
+    content.vocab.forEach(it => {
+      if (!it.ex && exMap[it.word]) { const e = exMap[it.word]; it.ex = e.ex; it.exr = e.exr; it.exm = e.exm; }
     });
   }
   function todayIndex() { return Math.max(0, daysBetween(PLAN_START.toISOString().slice(0, 10), todayStr())); }
@@ -166,10 +381,19 @@
   function render() {
     const host = document.getElementById('mode-area');
     if (!host) return;
-    host.innerHTML = '<div class="n4-root">' + (VIEWS[view] || viewToday)() + '<div class="toast" id="n4-toast"></div></div>';
+    let body;
+    try {
+      body = (VIEWS[view] || viewToday)();
+    } catch (err) {
+      try { console.error('[N4] render error in view "' + view + '":', err); } catch (_) {}
+      body = '<div class="panel"><div class="eyebrow">N4</div><h2 class="section">Couldn\'t render this view</h2><p class="muted" style="margin-top:6px">' +
+             ((err && err.message) ? String(err.message) : String(err)) + '</p></div>';
+    }
+    host.innerHTML = '<div class="n4-root">' + body + '<div class="toast" id="n4-toast"></div></div>';
     document.querySelectorAll('#mode-tabs-wrap .mode-tab[data-n4view]').forEach(b =>
       b.classList.toggle('active', b.dataset.n4view === view));
-    (AFTER[view] || (() => {}))();
+    try { (AFTER[view] || (() => {}))(); }
+    catch (err) { try { console.error('[N4] after-render error in "' + view + '":', err); } catch (_) {} }
   }
 
   /* ---------- TODAY ---------- */
@@ -267,8 +491,26 @@
   function afterToday() { document.querySelectorAll('.n4-root [data-go]').forEach(b => b.onclick = () => { go(b.dataset.go); }); }
 
   /* ---------- LEARN ---------- */
-  let learnCat = 'kanji', learnRevealed = false, learnItem = null, learnLevel = 'all';
+  /* History-based deck: learnSeq is the ordered list of cards you've walked
+     through this session; learnIdx points at the current one. Back steps back
+     through that history (even to cards you already added), Skip/Got-it step
+     forward — appending the next unseen card when you reach the end. This is
+     why Back works during a normal add-and-advance flow. */
+  let learnCat = 'kanji', learnRevealed = false, learnLevel = 'all';
+  let learnSeq = [], learnIdx = -1;
   const lvOK = it => learnLevel === 'all' || it.level === learnLevel;
+  function resetLearnDeck() { learnSeq = []; learnIdx = -1; learnRevealed = false; }
+  function nextLearnCard() {
+    const inSeq = new Set(learnSeq.map(x => x.id));
+    const cu = catchUpList(learnCat).filter(lvOK).filter(it => !inSeq.has(it.id));
+    const pool = cu.length ? cu : newList(learnCat).filter(lvOK).filter(it => !inSeq.has(it.id));
+    return pool[0] || null;
+  }
+  function learnAdvance() {
+    if (learnIdx < learnSeq.length - 1) learnIdx++;
+    else { const nx = nextLearnCard(); if (nx) { learnSeq.push(nx); learnIdx = learnSeq.length - 1; } }
+    learnRevealed = false; renderLearnStage();
+  }
   function viewLearn() {
     return `
     <div class="panel">
@@ -283,51 +525,74 @@
   }
   function renderLearnStage() {
     const stage = $('#learnStage');
-    const cu = catchUpList(learnCat).filter(lvOK);
-    const ahead = !cu.length;
-    const queue = cu.length ? cu : newList(learnCat).filter(lvOK);
-    const done = itemsOf(learnCat).length - newList(learnCat).length;
-    if (!learnItem || !queue.find(x => x.id === learnItem.id)) learnItem = queue[0] || null;
-    if (!learnItem) {
+    // Ensure there's a current card; pull the first one on entry.
+    if (learnIdx < 0 || learnIdx >= learnSeq.length) {
+      const nx = nextLearnCard();
+      if (nx) { learnSeq.push(nx); learnIdx = learnSeq.length - 1; }
+    }
+    if (learnIdx < 0 || !learnSeq.length) {
       stage.innerHTML = `<div class="empty"><div class="big">済</div>Every ${learnCat} item is in your review rotation.<br><span class="faint">Add more from the Content tab, then come back.</span></div>`;
       return;
     }
+    const it = learnSeq[learnIdx];
+    const alreadyLearned = isSeen(it.id);
     const total = itemsOf(learnCat).length;
+    const done = total - newList(learnCat).length;
+    const ahead = !catchUpList(learnCat).filter(lvOK).length;
     const banner = ahead
       ? `<span class="pill"><span class="dot cel"></span>Caught up — learning ahead</span>`
-      : `<span class="pill"><span class="dot shu"></span>${cu.length} to learn today</span>`;
-    const lvb = learnItem && learnItem.level ? `<span class="lvtag ${learnItem.level}">${learnItem.level}</span>` : '';
-    const strip = `<div class="prog-strip"><span class="faint" style="font-size:12px">${done}/${total} learned</span><div class="bar"><span style="width:${Math.round(done / total * 100)}%"></span></div>${lvb}${banner}</div>`;
-    const it = learnItem;
+      : `<span class="pill"><span class="dot shu"></span>${catchUpList(learnCat).filter(lvOK).length} to learn today</span>`;
+    const lvb = it.level ? `<span class="lvtag ${it.level}">${it.level}</span>` : '';
+    const strip = `<div class="prog-strip"><span class="faint" style="font-size:12px">${done}/${total} learned · card ${learnIdx + 1}</span><div class="bar"><span style="width:${Math.round(done / total * 100)}%"></span></div>${lvb}${banner}</div>`;
     let front = '', back = '';
     if (learnCat === 'kanji') {
       front = `<div class="kanji-big jp">${it.char}</div>`;
       back = `<div class="meaning">${it.meaning}</div>
-        <div class="detail" style="margin-top:8px">On: <b class="jp">${it.on}</b> &nbsp;·&nbsp; Kun: <b class="jp">${it.kun}</b></div>
-        <div class="ex"><div class="exjp">${it.ex} <span style="color:var(--n4-shu)">（${it.exr}）</span></div><div class="extr">${it.exm}</div></div>`;
+        <div class="detail" style="margin-top:8px">On: <b class="jp">${it.on}</b> ${spkReading(it.on)} &nbsp;·&nbsp; Kun: <b class="jp">${it.kun}</b> ${spkReading(it.kun)}</div>
+        <div class="ex"><div class="exjp">${it.ex} <span style="color:var(--n4-shu)">（${it.exr}）</span> ${spk(it.ex, 'Hear the example word')}</div><div class="extr">${it.exm}</div></div>
+        ${kanjiSentenceBlock(it)}
+        <div class="faint" style="font-size:12px;margin-top:8px">Tip: learn the reading used in the example word — that's the one you'll actually meet.</div>`;
     } else if (learnCat === 'vocab') {
-      front = `<div class="word-big jp">${it.word}</div>`;
-      back = `<div class="reading jp">${it.reading}</div><div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:6px">${it.pos}</div>`;
+      front = `<div class="word-big jp">${it.word}</div><div style="margin-top:10px">${spk(it.reading || it.word, 'Hear pronunciation')}</div>`;
+      back = `<div class="reading jp">${it.reading} ${spk(it.reading || it.word)}</div><div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:6px">${it.pos}</div>${vocabExampleBlock(it)}`;
     } else {
       front = `<div class="grammar-big jp">${it.pattern}</div>`;
       back = `<div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:6px"><b>Form:</b> ${it.structure}</div>
-        <div class="ex"><div class="exjp">${it.ex}</div><div class="extr">${it.extr}</div></div>`;
+        <div class="ex"><div class="exjp">${it.ex} ${spk(it.ex, 'Hear the example sentence')}</div><div class="extr">${it.extr}</div></div>`;
     }
+    const atStart = learnIdx <= 0;
+    const hasNext = (learnIdx < learnSeq.length - 1) || !!nextLearnCard();
+    let action;
+    if (!learnRevealed) action = `<button class="btn" id="lreveal">Reveal</button>`;
+    else if (alreadyLearned) action = `<span class="pill" style="padding:9px 14px"><span class="dot cel"></span>Already in your reviews</span>`;
+    else action = `<button class="btn shu" id="ladd">Got it — add to reviews →</button>`;
     stage.innerHTML = `${strip}
       <div class="study-stage">${front}${learnRevealed ? back : '<div class="faint" style="margin-top:20px">Recall what you can, then reveal.</div>'}</div>
       <div class="btnrow" style="justify-content:center">
-        ${learnRevealed
-        ? `<button class="btn ghost sm" id="lskip">Skip for now</button><button class="btn shu" id="ladd">Got it — add to reviews →</button>`
-        : `<button class="btn ghost sm" id="lskip">Skip</button><button class="btn" id="lreveal">Reveal</button>`}
+        <button class="btn ghost sm" id="lback" ${atStart ? 'disabled' : ''} title="Go back to the previous card you saw">← Back</button>
+        <button class="btn ghost sm" id="lskip" ${hasNext ? '' : 'disabled'} title="Move to the next card without adding this one to reviews">Skip →</button>
+        ${action}
       </div>`;
     if ($('#lreveal')) $('#lreveal').onclick = () => { learnRevealed = true; renderLearnStage(); };
-    if ($('#ladd')) $('#ladd').onclick = () => { introduce(it.id); learnRevealed = false; learnItem = null; toast('Added to reviews'); renderLearnStage(); updateLearnChips(); };
-    if ($('#lskip')) $('#lskip').onclick = () => { const q = newList(learnCat).filter(lvOK); const i = q.findIndex(x => x.id === it.id); learnItem = q[(i + 1) % q.length] || null; learnRevealed = false; renderLearnStage(); };
+    if ($('#lback')) $('#lback').onclick = () => { learnIdx = Math.max(0, learnIdx - 1); learnRevealed = false; renderLearnStage(); };
+    if ($('#lskip')) $('#lskip').onclick = () => { learnAdvance(); };
+    if ($('#ladd')) $('#ladd').onclick = () => { introduce(it.id); toast('Added to reviews'); updateLearnChips(); learnAdvance(); };
+  }
+  /* Example-sentence block for vocab (shown only when a sentence exists). */
+  function vocabExampleBlock(it) {
+    if (!it.ex) return '';
+    return `<div class="ex"><div class="exjp">${it.ex} ${spk(it.ex, 'Hear the example sentence')}</div><div class="extr">${it.exr ? `<span class="jp" style="color:var(--n4-ink-faint)">${it.exr}</span> · ` : ''}${it.exm || ''}</div></div>`;
+  }
+  /* Example-sentence block for kanji (curated set, keyed by character). */
+  function kanjiSentenceBlock(it) {
+    const s = KANJI_SENT[it.char];
+    if (!s) return '';
+    return `<div class="ex" style="border-left:3px solid var(--n4-celadon)"><div class="exjp">${s.ja} ${spk(s.ja, 'Hear the example sentence')}</div><div class="extr"><span class="jp" style="color:var(--n4-ink-faint)">${s.r}</span> · ${s.m}</div></div>`;
   }
   function updateLearnChips() { document.querySelectorAll('#learnCats .chip').forEach(c => { const t = c.dataset.cat; c.textContent = `${t[0].toUpperCase() + t.slice(1)} · ${catchUpList(t).filter(lvOK).length} due / ${newList(t).filter(lvOK).length} left`; }); }
   function afterLearn() {
-    document.querySelectorAll('#learnCats .chip').forEach(c => c.onclick = () => { learnCat = c.dataset.cat; learnItem = null; learnRevealed = false; document.querySelectorAll('#learnCats .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.cat === learnCat)); renderLearnStage(); });
-    document.querySelectorAll('#learnLevels .chip').forEach(c => c.onclick = () => { learnLevel = c.dataset.lv; learnItem = null; learnRevealed = false; document.querySelectorAll('#learnLevels .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.lv === learnLevel)); updateLearnChips(); renderLearnStage(); });
+    document.querySelectorAll('#learnCats .chip').forEach(c => c.onclick = () => { learnCat = c.dataset.cat; resetLearnDeck(); document.querySelectorAll('#learnCats .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.cat === learnCat)); renderLearnStage(); });
+    document.querySelectorAll('#learnLevels .chip').forEach(c => c.onclick = () => { learnLevel = c.dataset.lv; resetLearnDeck(); document.querySelectorAll('#learnLevels .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.lv === learnLevel)); updateLearnChips(); renderLearnStage(); });
     renderLearnStage();
   }
 
@@ -348,13 +613,13 @@
     let front = '', back = '';
     if (it.type === 'kanji') {
       front = `<div class="kanji-big jp">${it.char}</div>`;
-      back = `<div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:8px">On: <b class="jp">${it.on}</b> · Kun: <b class="jp">${it.kun}</b></div><div class="ex"><div class="exjp">${it.ex}（${it.exr}）</div><div class="extr">${it.exm}</div></div>`;
+      back = `<div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:8px">On: <b class="jp">${it.on}</b> ${spkReading(it.on)} · Kun: <b class="jp">${it.kun}</b> ${spkReading(it.kun)}</div><div class="ex"><div class="exjp">${it.ex}（${it.exr}） ${spk(it.ex, 'Hear the example word')}</div><div class="extr">${it.exm}</div></div>`;
     } else if (it.type === 'vocab') {
       front = `<div class="word-big jp">${it.word}</div>`;
-      back = `<div class="reading jp">${it.reading}</div><div class="meaning">${it.meaning}</div>`;
+      back = `<div class="reading jp">${it.reading} ${spk(it.reading || it.word)}</div><div class="meaning">${it.meaning}</div>${vocabExampleBlock(it)}`;
     } else {
       front = `<div class="grammar-big jp">${it.pattern}</div>`;
-      back = `<div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:6px"><b>Form:</b> ${it.structure}</div><div class="ex"><div class="exjp">${it.ex}</div><div class="extr">${it.extr}</div></div>`;
+      back = `<div class="meaning">${it.meaning}</div><div class="detail" style="margin-top:6px"><b>Form:</b> ${it.structure}</div><div class="ex"><div class="exjp">${it.ex} ${spk(it.ex, 'Hear the example sentence')}</div><div class="extr">${it.extr}</div></div>`;
     }
     stage.innerHTML = `
       <div class="prog-strip"><span class="faint" style="font-size:12px">${remaining} to review</span><div class="bar"><span style="width:${Math.round((1 - remaining / (remaining + (log[todayStr()] || {}).reviews || remaining)) * 100)}%"></span></div>${it.level ? `<span class="lvtag ${it.level}">${it.level}</span>` : ''}<span class="pill">${it.type}</span></div>
@@ -445,7 +710,7 @@
         else if (val === chosen) b.classList.add('wrong');
       });
       if (chosen === q.answer) quiz.score++;
-      setTimeout(() => { quiz.i++; quiz.answered = false; renderQuizStage(); }, 900);
+      setTimeout(() => { if (!quiz || view !== 'quiz') return; quiz.i++; quiz.answered = false; renderQuizStage(); }, 900);
     });
   }
   function afterQuiz() { renderQuizStage(); }
@@ -649,8 +914,8 @@
 
   function go(v) {
     view = v;
-    // reset transient per-view state
-    learnItem = null; learnRevealed = false; reviewQueue = []; reviewRevealed = false; quiz = null;
+    // reset transient per-view state (learn deck history is kept across tab switches)
+    learnRevealed = false; reviewQueue = []; reviewRevealed = false; quiz = null;
     render();
   }
 
@@ -675,6 +940,15 @@
     buildContent();
     render();
   }
+
+  /* One delegated listener handles every speaker button, no matter which render
+     path (view render, stage re-render, quiz step) created it. */
+  document.addEventListener('click', (e) => {
+    try {
+      const b = e.target && e.target.closest && e.target.closest('.n4-root [data-speak]');
+      if (b) { e.stopPropagation(); speak(b.dataset.speak, b.hasAttribute('data-slow')); }
+    } catch (_) { /* never let a click handler break the page */ }
+  });
 
   window.N4 = { open, go };
 })();

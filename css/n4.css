@@ -185,6 +185,17 @@
 .n4-root .kv:last-child { border-bottom: none; }
 .n4-root :focus-visible { outline: 2px solid var(--n4-shu); outline-offset: 2px; border-radius: 6px; }
 
+/* ---------- Speaker (audio) buttons ---------- */
+.n4-root .n4-spk {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; padding: 0; margin: 0 1px;
+  border: 1px solid var(--n4-line); background: var(--n4-paper-2); color: var(--n4-ink);
+  border-radius: 50%; font-size: 13px; line-height: 1; vertical-align: middle; cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s, transform .08s;
+}
+.n4-root .n4-spk:hover { border-color: var(--n4-shu); color: var(--n4-shu); }
+.n4-root .n4-spk:active { transform: translateY(1px); }
+
 /* ---------- Toast (rendered inside .n4-root) ---------- */
 .n4-root .toast {
   position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
